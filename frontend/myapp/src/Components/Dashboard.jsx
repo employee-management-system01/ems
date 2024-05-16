@@ -52,7 +52,7 @@ function Dashboard() {
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto' }}>
+        <Box sx={{ overflow: 'auto' ,backgroundColor:'#  CDF5FD' }}>
           <List>
             {/* <Link to='/dashboard/home'> */}
             {['Dashboard'].map((text) => (
@@ -88,7 +88,7 @@ function Dashboard() {
           <List>
             {/* <Link to= '/dashboard/department'> */}
             {['Role'].map((text,) => (
-              <ListItem key={text} disablePadding onClick={()=>{navigate("/dashboard/department")}} >
+              <ListItem key={text} disablePadding onClick={()=>{navigate("/dashboard/deptTable")}} >
                
                 <ListItemButton>
                   <ListItemIcon>
