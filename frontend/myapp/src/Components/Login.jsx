@@ -5,7 +5,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import '../Components/Login.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import MyContext from '../context/MyContext';
+// import MyContext from '../context/MyContext';
+import { Context } from '../context/MyContext';
 
 function Login() {
   const navigate = useNavigate(); 
@@ -16,36 +17,43 @@ function Login() {
     password: '',
   });
 
-  const apiData =  useContext(MyContext)
-  console.log(apiData);
+ 
+
+  const apiData =  useContext(Context)
+  console.log(apiData.role);
   const handleSubmit = (e) => {
     e.preventDefault();
     postData()
-    alert('data submitted');
+    // alert('data submitted');
   }
 
 
-
-
- 
 
   const postData = async () => {
     try {
       const url = 'http://localhost:6060/login';
       console.log(formData)
       const res = await axios.post(url, formData);
-      console.log(res.data);
-      console.log(res.data.user.role_name);
+     console.log('login data:',res);
+      let obj = {
+        email: res.data.user.email
+      }
+  
+      
+
+    
+      const res2 = await axios.post('http://localhost:6060/attendance',obj)
 
       //
-
-      if (res.status === 200) {
+      if (res.data.token) {
         console.log('Data submitted successfully');
         console.log(apiData);
         if (res.data.user.role_name === 'Admin') {
+          console.log(formData.email);
           console.log(res.data.user.role_name);
           navigate('/dashboard');
         } else {
+          // const res2 = await axios.post('http://localhost:6060/attendance',formData.email)
           navigate('/emp_dashboard' );
         }
       } else {
@@ -55,6 +63,10 @@ function Login() {
       console.log(error);
     }
   };
+ 
+   
+
+
  
   return (
     <>

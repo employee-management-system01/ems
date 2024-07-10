@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+
 import AddRole from './AddRole';
 // import AddDepartment from './AddDepartment';
 

@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import axios from 'axios';
 
 
@@ -32,11 +32,11 @@ const ViewRole = (props) => {
 
 
   //delete 
-  async function deleteData(role_id) {
+  async function deleteData(role_id, emp_id) {
 
     let url = 'http://localhost:6060/roleDetails/roleassDel/';
-    let res = await axios.delete(`${url}${role_id}`);
-    console.log(res);
+    let res = await axios.delete(`${url}${role_id}/${emp_id}`);
+    console.log(res);    
     getdata();
 
   }
@@ -83,7 +83,7 @@ const ViewRole = (props) => {
                       <td>{item.emp_id}</td>
                       <td>{item.role_id}</td>
                       <td>{item.role_name}</td>
-                      <td><Button onClick={() => deleteData(item.role_id)}>Delete</Button></td>
+                      <td><Button onClick={() => deleteData(item.role_id,item.emp_id)}>Delete</Button></td>
                     </tr>
                   )
                 })

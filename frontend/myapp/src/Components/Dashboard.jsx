@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext} from 'react'
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
@@ -11,16 +11,21 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+
 
 import AddHomeWorkRoundedIcon from '@mui/icons-material/AddHomeWorkRounded';
 import ManageAccountsSharpIcon from '@mui/icons-material/ManageAccountsSharp';
-import AddHomeWorkIcon from '@mui/icons-material/AddHomeWork';
+
 import AccessibilityIcon from '@mui/icons-material/Accessibility';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 import {  Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { Context } from '../context/MyContext';
+import AdminProfile from './AdminProfile';
 
 
 
@@ -32,14 +37,54 @@ import { useNavigate } from 'react-router-dom';
 const drawerWidth = 240;
 
 function Dashboard() {
+
+
+
+
   const navigate = useNavigate(); 
+
+  // const apiData =  useContext(Context)
+  const apiData =  useContext(Context)
+  console.log(apiData.email);
+  // const obj = {
+  //   email : apiData.email
+  // }
+// console.log(obj);
+ 
+  axios.defaults.withCredentials=true;
+  // logout
+  const handleLogout = async () => {
+    try {
+      // Wait for the patch request to complete
+      await axios.patch(`http://localhost:6060/api/check_out/${apiData.email}`);
+  
+      // Proceed with the logout process
+      const res = await axios.get('http://localhost:6060/logout');
+  
+      if (res.data.message === "Success") {
+        // Ensure apiData is defined and contains email before using it
+        navigate('/');
+        window.location.reload()
+      } else {
+        console.log(res.data);
+      }
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
+    }
+  };
+  
+  
+
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex',  }}>
       <CssBaseline />
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-        <Toolbar>
+        <Toolbar style={{justifyContent:'space-between'}}>
           <Typography variant="h6" noWrap component="div">
             Employee management system
+          </Typography>
+          <Typography>
+           <AdminProfile/>
           </Typography>
         </Toolbar>
       </AppBar>
@@ -52,7 +97,7 @@ function Dashboard() {
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto' ,backgroundColor:'#  CDF5FD' }}>
+        <Box sx={{ overflow: 'auto' , }}>
           <List>
             {/* <Link to='/dashboard/home'> */}
             {['Dashboard'].map((text) => (
@@ -92,7 +137,7 @@ function Dashboard() {
                
                 <ListItemButton>
                   <ListItemIcon>
-                    <AddHomeWorkIcon />
+                    <BusinessCenterIcon />
                   </ListItemIcon>
                   <ListItemText primary={text} />
                 </ListItemButton>
@@ -119,7 +164,7 @@ function Dashboard() {
           </List>
           <List>
             {/* <Link to= '/dashboaerd/salary'> */}
-            {['Profile'].map((text, index) => (
+            {['Leaves'].map((text, index) => (
               <ListItem key={text} disablePadding onClick={()=>{navigate("/dashboard/profile")}} >
                
                 <ListItemButton>
@@ -136,7 +181,7 @@ function Dashboard() {
           <List>
           {/* <Link to='/dashboard/logout'> */}
             {['Logout'].map((text, index) => (
-              <ListItem key={text} disablePadding onClick={()=>{navigate("/dashboard/logout")}} >
+              <ListItem key={text} disablePadding onClick={()=>{handleLogout()}} >
                
                 <ListItemButton>
                   <ListItemIcon>
@@ -152,13 +197,11 @@ function Dashboard() {
          
         </Box>
       </Drawer>
-      <Box component="main"   sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main"   sx={{ flexGrow: 1, p: 3 , backgroundColor:'#f9f9f9',}}>
           <Toolbar />
+            
+         
           <Outlet/>
-        
-
-        
-       {/* <Graph/> */}
         
       </Box>
     </Box>

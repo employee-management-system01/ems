@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react'
 import axios from 'axios';
 
-const context =  createContext();
+export const Context =  createContext();
 const MyContext = ({children}) => {
    const [apiData,setApiData] =  useState([]);
    axios.defaults.withCredentials=true;
@@ -12,7 +12,7 @@ const MyContext = ({children}) => {
     try{
       const url = 'http://localhost:6060/admin';
       const response =  await axios.get(url)
-      console.log(response);
+      console.log(response.data);
       setApiData(response.data)
       
     }catch (error){
@@ -25,9 +25,9 @@ const MyContext = ({children}) => {
    },[])
   return (
     <div>
-     <context.Provider value={apiData}>
+     <Context.Provider value={apiData}>
       {children}
-      </context.Provider> 
+      </Context.Provider> 
     </div>
   )
 }

@@ -15,7 +15,7 @@ import EmpTable from './Components/EmpTable';
 import UpdateEmp from './Components/UpdateEmp';
 import DeptTable from './Components/DeptTable';
 import EmpDashboard from './EmpComponent/EmpDashboard';
-import MyContext from './context/MyContext';
+
 
 function App() {
   
@@ -24,7 +24,7 @@ function App() {
    
    {/* <Dashboard/> */}
    
-   <MyContext>
+   
    
     <Routes>
       <Route path = '/' element={<Login/>}></Route> 
@@ -35,7 +35,7 @@ function App() {
         <Route path='/dashboard/deptTable' element={<DeptTable/>}></Route>
         <Route path='/dashboard/attendance' element={<Attendance/>}></Route>
         <Route path='/dashboard/profile' element={<Profile/>}></Route>
-        <Route path='/dashboard/logout' element={<Logout/>}></Route>
+        {/* <Route path='/dashboard/logout' element={<Logout/>}></Route> */}
         {/* <Route path='/dashboard/AddCategory' element={<AddCategory/>}></Route> */}
         <Route path='/dashboard/AddEmployee' element={<AddEmployee/>}></Route>
         <Route path='/dashboard/UpdateEmp/:emp_id' element={<UpdateEmp/>}></Route>
@@ -43,7 +43,7 @@ function App() {
 
       </Route>
     </Routes>
-    </MyContext>
+  
    </>
   );
 }

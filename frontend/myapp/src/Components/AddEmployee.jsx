@@ -25,6 +25,23 @@ function AddEmployee({data}) {
     salary:'',
   }) ;
 
+//   const [searchData,setSearchData] = useState('');
+//   const [results,setresults] =  useState([]);
+//   const handleChange1 = (event) =>{
+//     setSearchData(event.target.value);
+//   };
+
+// useEffect(()=>{
+//   const getData = async () =>{
+//     if (searchData){
+//       const res =  await axios.get(`http://localhost:6060/empDetails_search/${searchData}`);
+//       setresults(res.data)
+//     }else {
+//       setresults([])
+//     }
+//   } 
+//  getData()
+// },[searchData])
   
 
   // const navigate =useNavigate();
@@ -71,9 +88,16 @@ function AddEmployee({data}) {
 
   return(
     <div style={{  position: 'relative',  }}>
-       <Button variant="primary" onClick={handleShow}>
+      <div class="d-flex">
+      
+       
+       
+      <Button variant="primary" onClick={handleShow}>
         Add
       </Button>
+    
+      </div>
+   
 
       <Modal
       style={{zIndex:"1500"}}

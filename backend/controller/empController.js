@@ -1,3 +1,4 @@
+const { query } = require("express");
 const connection = require("../model/dbConnect");
 // const nodemailer = require('nodemailer')
 
@@ -36,6 +37,28 @@ const getSearch = async (req, res) => {
     res.send(error.sqlMessage);
   }
 };
+
+//Search emp by name
+
+const getSearch2 = async (req, res) => {
+  try {
+    // let userData = req.body.query;
+    let emp_name = req.params.emp_name;
+    console.log(emp_name);
+    let sqlQuery = "SELECT * FROM emp_details WHERE emp_name = ?";
+    await connection.query(sqlQuery, [emp_name], function (err, result) {
+      if (err) {
+        console.log("Error:", err.sqlMessage);
+      } else {
+        res.json(result);
+      }
+    });
+  } catch (error) {
+    res.send(error.sqlMessage);
+  }
+};
+
+
 
 // post
 // const postEmp = async (req, res) => {
@@ -135,6 +158,7 @@ const cardApi = async (req, res) => {
   await connection.query(sqlQuery, [data], (err, result) => {
     if (err) {
       console.log("Error", err.sqlMessage);
+      res.json(err)
     } else {
       res.send(result);
     }
@@ -145,7 +169,7 @@ const cardApi = async (req, res) => {
 const toggleStatus = async (req, res) => {
   try {
     let emp_id = req.params.emp_id;
-    console.log(emp_id);
+    // console.log(emp_id);
     let status = req.params.status;
     let sqlQuery = "UPDATE emp_details SET status = ? WHERE emp_id=?";
     await connection.query(sqlQuery, [status, emp_id], (err, result) => {
@@ -162,6 +186,135 @@ const toggleStatus = async (req, res) => {
   }
 };
 
+//  attendance
+
+const attendance = async (req,res)=>{
+  try{
+    let {email} = req.body;
+    let sqlQuery = `INSERT INTO attendance (email, check_in) VALUES (?, NOW())`;
+    await connection.query(sqlQuery,[email],(err,result)=>{
+      if (err) {
+        console.log("Error:", err.sqlMessage);
+        res.status(500).json({ error: err.sqlMessage });
+      } else {
+        res.json(result);
+        console.log(result);
+      }
+    })
+  }catch(error){
+    res.status(500).send(error.sqlMessage);
+  }
+}
+
+const check_out = async (req, res) => {
+  try {
+    const { email } = req.params; 
+    console.log(req.params);
+
+    const sqlQuery = `UPDATE attendance SET check_out = NOW() WHERE email = ?`;
+    await connection.query(sqlQuery, [email], (err, result) => {
+      if (err) {
+        console.error("Error:", err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Updated:", result.affectedRows);
+        return res.json({ message: "Check-out time updated successfully" });
+      }
+    });
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+//attendance
+
+const getAttendance = async(req,res)=>{
+  try{
+    
+    const sqlQuery = ' SELECT emp_details.emp_id,emp_details.emp_name,attendance.check_in,attendance.check_out,attendance.status,attendance.timedifference FROM attendance JOIN emp_details ON attendance.email =  emp_details.email;'
+    connection.query(sqlQuery,(err,result)=>{
+      if(err){
+        console.log("Error:",err.sqlMessage);
+        res.status(500).json({ error: err.sqlMessage });
+      }else{
+        res.json(result)
+      }
+    })
+  }catch(error){
+    res.status(500).json({ error: error.message });
+  }
+}
+
+//admin details
+
+const getAdminProfile = async(req,res)=>{
+  try{
+    const sqlQuery = 'SELECT emp_details.emp_id, emp_details.emp_name,emp_details.phone_no,emp_details.email,roles.role_id,roles.role_name FROM  emp_details INNER JOIN role_ass ON emp_details.emp_id = role_ass.emp_id INNER JOIN roles ON role_ass.role_id =  roles.role_id WHERE role_name = "Admin" ';
+    connection.query(sqlQuery,(err,result)=>{
+      if(err){
+        res.status(500).json({ error: err.sqlMessage });
+      }else{
+        res.json(result)
+      }
+    })
+  }catch(error){
+    res.status(500).json({ error: error.message });
+  }
+}
+
+
+// upload admin photo
+
+const uploadfile = async(req,res)=>{
+  try{
+      let emp_id = req.params.emp_id;
+      let sqlQuery = ' UPDATE emp_details SET photo = ? WHERE emp_id = ? '  
+      let data = {
+        photo : req.file.location
+      }
+     
+      await connection.query(sqlQuery,[data.photo,emp_id],(err, result)=>{
+        if(err){
+          res.status(500).json({ error: err.sqlMessage });
+        }else{
+          res.json(result)
+          console.log(req.file);
+        }
+      })
+  }catch(error){
+    res.status(500).json({ error: error.message });
+  }
+}
+
+
+// function addcourse(req,res){
+//   try{
+//       let sql="INSERT INTO courses SET ?"
+//       let data={
+//           course_id: req.body.course_id,
+//           course_name: req.body.course_name,
+//           syllabus: req.file.location,
+//           duration: req.body.duration,
+//           fees: req.body.fees,
+//           description: req.body.description,
+//           teacher_id :req.body.teacher_id ,
+//           status:"pending"
+//       }
+//       connection.query(sql,[data],(err,result)=>{
+//           if(err){
+//               console.log(err)
+//           }else{
+//               res.send(result)
+//           }
+//       })
+//   }catch(error){
+//       console.error(error)
+//     }
+// }
+
+
 module.exports = {
   getEmp,
   deleteEmp,
@@ -169,4 +322,9 @@ module.exports = {
   updateEmp,
   cardApi,
   toggleStatus,
+  getSearch2,
+  attendance,
+  check_out,getAttendance,
+  getAdminProfile,
+  uploadfile
 };

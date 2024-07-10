@@ -94,8 +94,9 @@ const AssRole = async (req,res)=>{
 const deleteRoleAss = async(req,res)=>{
   try{
     let role_id =  req.params.role_id;
-    let sqlQuery = 'DELETE FROM role_ass WHERE role_id = ?';
-   await connection.query(sqlQuery,[role_id],(err,result)=>{
+    let emp_id =  req.params.emp_id;
+    let sqlQuery = 'DELETE FROM role_ass WHERE role_id = ? and emp_id=?';
+   await connection.query(sqlQuery,[role_id,emp_id],(err,result)=>{
       if(err){
         console.log("Error:",err.sqlMessage);
       }else{

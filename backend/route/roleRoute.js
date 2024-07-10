@@ -12,6 +12,6 @@ roleRouter.post('/roleDetails',postRole);
 roleRouter.delete('/roleDetails/:role_id',deleteRole);
 roleRouter.get('/roleDetails/:emp_id',roleAssign);
 roleRouter.post('/roleDetails/roleass',AssRole);
-roleRouter.delete('/roleDetails/roleassDel/:role_id',deleteRoleAss);
+roleRouter.delete('/roleDetails/roleassDel/:role_id/:emp_id',deleteRoleAss);
 
 module.exports = roleRouter;
